@@ -1,0 +1,144 @@
+{
+  "id": "concurso-publico",
+  "version": "1.0.0",
+  "name": "Concurso Público",
+  "description": "Organização orientada a edital verticalizado, peso por disciplina, leitura de lei seca e simulados.",
+  "eventTypes": [
+    {
+      "key": "simulado",
+      "label": "Simulado Objetiva / Discursiva",
+      "icon": "clipboard-check",
+      "color": "#4A5859",
+      "defaultDurationMin": 240,
+      "fields": [
+        {
+          "key": "banca",
+          "label": "Banca Examinadora",
+          "type": "select",
+          "analyzable": true,
+          "options": ["CEBRASPE", "FGV", "FCC", "VUNESP", "CESGRANRIO"]
+        },
+        {
+          "key": "modalidade",
+          "label": "Formato",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Certo / Errado", "Múltipla Escolha", "Redação / Discursiva"]
+        }
+      ]
+    },
+    {
+      "key": "aula",
+      "label": "Videoaula / PDF",
+      "icon": "book-open",
+      "color": "#3D5A45",
+      "defaultDurationMin": 90,
+      "fields": [
+        {
+          "key": "formato",
+          "label": "Material Base",
+          "type": "select",
+          "analyzable": true,
+          "options": ["PDF Completo", "Resumo Sintético", "Videoaula"]
+        }
+      ]
+    }
+  ],
+  "itemTypes": [
+    {
+      "key": "leitura-edital",
+      "label": "Tópico do Edital",
+      "icon": "book",
+      "fields": [
+        {
+          "key": "camada",
+          "label": "Camada de Estudo",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Doutrina / PDF", "Lei Seca", "Jurisprudência", "Questões de Fixação"]
+        }
+      ]
+    },
+    {
+      "key": "revisao",
+      "label": "Revisão de Véspera / Ciclo",
+      "icon": "repeat",
+      "fields": [
+        {
+          "key": "metodo",
+          "label": "Método",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Grifos", "Flashcards", "Caderno de Erros"]
+        }
+      ]
+    }
+  ],
+  "taxonomy": [
+    {
+      "key": "direito-constitucional",
+      "title": "Direito Constitucional",
+      "color": "#3B5249",
+      "topics": [
+        { "key": "direitos-fundamentais", "title": "Direitos e Garantias Fundamentais (Art. 5º ao 17)", "weight": 3 },
+        { "key": "controle-constitucionalidade", "title": "Controle de Constitucionalidade", "weight": 3 }
+      ]
+    },
+    {
+      "key": "direito-administrativo",
+      "title": "Direito Administrativo",
+      "color": "#5C6B73",
+      "topics": [
+        { "key": "atos-administrativos", "title": "Atos Administrativos e Poderes da Administração", "weight": 3 },
+        { "key": "licitacoes-14133", "title": "Licitações e Contratos (Lei 14.133/2021)", "weight": 3 }
+      ]
+    },
+    {
+      "key": "lingua-portuguesa",
+      "title": "Língua Portuguesa e Redação Oficial",
+      "color": "#7A5C3E",
+      "topics": [
+        { "key": "sintaxe-concordancia", "title": "Sintaxe de Concordância e Regência", "weight": 2 },
+        { "key": "reescrita-textos", "title": "Coesão, Coerência e Reescrita de Períodos", "weight": 3 }
+      ]
+    },
+    {
+      "key": "raciocinio-logico",
+      "title": "Raciocínio Lógico e Estatística",
+      "color": "#6D4C5C",
+      "topics": [
+        { "key": "logica-proposicional", "title": "Lógica Proposicional, Equivalências e Tabelas-Verdade", "weight": 2 }
+      ]
+    }
+  ],
+  "generators": [
+    {
+      "kind": "weighted",
+      "params": {
+        "itemsPerWeek": 5,
+        "itemTypeKey": "leitura-edital"
+      }
+    }
+  ],
+  "suggestedRules": [
+    {
+      "id": "r_concurso_01",
+      "name": "Reforçar tópico após erro em questão",
+      "enabled": true,
+      "when": { "trigger": "attempt.registered" },
+      "if": [
+        { "condition": "rate-below", "params": { "threshold": 0.65 } }
+      ],
+      "then": [
+        { "action": "create-item", "params": { "itemType": "revisao", "offsetDays": 1 } }
+      ]
+    }
+  ],
+  "dashboard": [
+    "progress",
+    "events-of-type:simulado",
+    "hours-by-subject",
+    "accuracy-by-topic",
+    "countdown"
+  ]
+}

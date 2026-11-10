@@ -1,0 +1,147 @@
+{
+  "id": "graduacao",
+  "version": "1.0.0",
+  "name": "Graduação Universitária",
+  "description": "Acompanhamento semestral de disciplinas, aulas práticas, laboratório, saídas de campo e avaliações.",
+  "eventTypes": [
+    {
+      "key": "aula",
+      "label": "Aula Semestral",
+      "icon": "book-open",
+      "color": "#3D5A45",
+      "defaultDurationMin": 100,
+      "fields": [
+        {
+          "key": "sala",
+          "label": "Bloco / Sala",
+          "type": "text",
+          "analyzable": true
+        }
+      ]
+    },
+    {
+      "key": "saida-de-campo",
+      "label": "Saída de Campo / Prática",
+      "icon": "compass",
+      "color": "#5C6B73",
+      "defaultDurationMin": 240,
+      "fields": [
+        {
+          "key": "bioma_local",
+          "label": "Estação / Ambiente",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Reserva Ecológica", "Laboratório Central", "Estação Experimental", "Campo Aberto"]
+        },
+        {
+          "key": "relatorio_obrigatorio",
+          "label": "Exige Relatório",
+          "type": "boolean",
+          "analyzable": true
+        }
+      ]
+    },
+    {
+      "key": "avaliacao",
+      "label": "Prova / Seminário",
+      "icon": "award",
+      "color": "#7A5C3E",
+      "defaultDurationMin": 120,
+      "fields": [
+        {
+          "key": "etapa",
+          "label": "Avaliação",
+          "type": "select",
+          "analyzable": true,
+          "options": ["P1", "P2", "P3 / Substitutiva", "Seminário"]
+        }
+      ]
+    }
+  ],
+  "itemTypes": [
+    {
+      "key": "leitura-bibliografia",
+      "label": "Leitura Bibliográfica",
+      "icon": "file-text",
+      "fields": [
+        {
+          "key": "referencia",
+          "label": "Capítulo / Artigo",
+          "type": "text",
+          "analyzable": false
+        }
+      ]
+    },
+    {
+      "key": "lista-exercicios",
+      "label": "Lista de Exercícios / Relatório",
+      "icon": "check-square",
+      "fields": [
+        {
+          "key": "entrega_avaliativa",
+          "label": "Vale Nota",
+          "type": "boolean",
+          "analyzable": true
+        }
+      ]
+    }
+  ],
+  "taxonomy": [
+    {
+      "key": "ecologia-evolucao",
+      "title": "Ecologia de Populações e Evolução",
+      "color": "#3B5249",
+      "topics": [
+        { "key": "dinamica-populacional", "title": "Modelos de Crescimento Populacional e Nicho Ecológico", "weight": 2 },
+        { "key": "sucessao-ecologica", "title": "Sucessão Ecológica e Biomas", "weight": 2 }
+      ]
+    },
+    {
+      "key": "bioquimica-celular",
+      "title": "Bioquímica e Biologia Molecular",
+      "color": "#5C6B73",
+      "topics": [
+        { "key": "cinetica-enzimatica", "title": "Cinética Enzimática e Regulação Alostérica", "weight": 3 },
+        { "key": "replicacao-transcricao", "title": "Replicação de DNA e Expressão Gênica", "weight": 3 }
+      ]
+    },
+    {
+      "key": "bioestatistica",
+      "title": "Bioestatística e Delineamento",
+      "color": "#7A5C3E",
+      "topics": [
+        { "key": "testes-hipoteses", "title": "Testes de Hipóteses, ANOVA e Regressão Linear", "weight": 2 }
+      ]
+    }
+  ],
+  "generators": [
+    {
+      "kind": "linear",
+      "params": {
+        "itemsPerWeek": 3,
+        "itemTypeKey": "leitura-bibliografia"
+      }
+    }
+  ],
+  "suggestedRules": [
+    {
+      "id": "r_grad_01",
+      "name": "Criar entrega de relatório após saída de campo",
+      "enabled": true,
+      "when": { "trigger": "event.created" },
+      "if": [
+        { "condition": "type-is", "params": { "eventType": "saida-de-campo" } },
+        { "condition": "field-equals", "params": { "field": "relatorio_obrigatorio", "value": true } }
+      ],
+      "then": [
+        { "action": "create-item", "params": { "itemType": "lista-exercicios", "offsetDays": 5 } }
+      ]
+    }
+  ],
+  "dashboard": [
+    "progress",
+    "events-of-type:saida-de-campo",
+    "upcoming:aula",
+    "hours-by-subject"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@estudos/notes",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "dependencies": {
+    "@estudos/core": "*"
+  }
+}

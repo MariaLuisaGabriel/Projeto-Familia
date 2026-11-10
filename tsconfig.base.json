@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@estudos/core": ["./packages/core/src/index.ts"],
+      "@estudos/registries": ["./packages/registries/src/index.ts"],
+      "@estudos/template-schema": ["./packages/template-schema/src/index.ts"],
+      "@estudos/db": ["./packages/db/src/index.ts"],
+      "@estudos/ui": ["./packages/ui/src/index.tsx"],
+      "@estudos/identity": ["./modules/identity/index.ts"],
+      "@estudos/workspaces": ["./modules/workspaces/index.ts"],
+      "@estudos/calendar": ["./modules/calendar/index.ts"],
+      "@estudos/study": ["./modules/study/index.ts"],
+      "@estudos/practice": ["./modules/practice/index.ts"],
+      "@estudos/notes": ["./modules/notes/index.ts"],
+      "@estudos/rules": ["./modules/rules/index.ts"],
+      "@estudos/analytics": ["./modules/analytics/index.ts"]
+    }
+  }
+}

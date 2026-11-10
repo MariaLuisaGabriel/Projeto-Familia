@@ -1,0 +1,226 @@
+{
+  "id": "residencia-medica",
+  "version": "1.0.0",
+  "name": "Residência Médica",
+  "description": "Planejamento para provas de residência e rotina de internato com plantões, aulas, revisões e simulados.",
+  "eventTypes": [
+    {
+      "key": "plantao",
+      "label": "Plantão",
+      "icon": "hospital",
+      "color": "#5C6B73",
+      "defaultDurationMin": 720,
+      "fields": [
+        {
+          "key": "local",
+          "label": "Hospital / Unidade",
+          "type": "select",
+          "analyzable": true,
+          "options": ["HRC", "HRAN", "HBDF", "HMIB", "HRS"]
+        },
+        {
+          "key": "turno",
+          "label": "Turno",
+          "type": "select",
+          "analyzable": true,
+          "options": ["diurno", "noturno", "24h"]
+        },
+        {
+          "key": "setor",
+          "label": "Setor / Rodízio",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Pronto-Socorro", "Enfermaria", "UTI", "Centro Obstétrico", "Ambulatório"]
+        }
+      ]
+    },
+    {
+      "key": "aula",
+      "label": "Aula Teórica",
+      "icon": "book-open",
+      "color": "#3D5A45",
+      "defaultDurationMin": 120,
+      "fields": [
+        {
+          "key": "modalidade",
+          "label": "Modalidade",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Ao vivo", "Gravada", "Presencial"]
+        }
+      ]
+    },
+    {
+      "key": "simulado",
+      "label": "Simulado Geral",
+      "icon": "clipboard-check",
+      "color": "#7A5C3E",
+      "defaultDurationMin": 240,
+      "fields": [
+        {
+          "key": "banca",
+          "label": "Banca / Instituição",
+          "type": "select",
+          "analyzable": true,
+          "options": ["SES-DF", "ENARE", "USP", "UNICAMP", "SUS-SP"]
+        },
+        {
+          "key": "questoes_total",
+          "label": "Total de Questões",
+          "type": "number",
+          "analyzable": true,
+          "min": 10,
+          "max": 200
+        }
+      ]
+    }
+  ],
+  "itemTypes": [
+    {
+      "key": "estudo-teorico",
+      "label": "Estudo de Base",
+      "icon": "file-text",
+      "fields": [
+        {
+          "key": "prioridade",
+          "label": "Prioridade",
+          "type": "select",
+          "analyzable": true,
+          "options": ["Alta", "Média", "Baixa"]
+        },
+        {
+          "key": "tempo_estimado",
+          "label": "Tempo Estimado (min)",
+          "type": "duration",
+          "analyzable": true
+        }
+      ]
+    },
+    {
+      "key": "revisao",
+      "label": "Revisão Programada",
+      "icon": "repeat",
+      "fields": [
+        {
+          "key": "ciclo",
+          "label": "Ciclo de Revisão",
+          "type": "select",
+          "analyzable": true,
+          "options": ["R1 (7d)", "R2 (15d)", "R3 (30d)", "Final"]
+        }
+      ]
+    },
+    {
+      "key": "lista-questoes",
+      "label": "Bateria de Questões",
+      "icon": "check-square",
+      "fields": [
+        {
+          "key": "quantidade",
+          "label": "Meta de Questões",
+          "type": "number",
+          "analyzable": true,
+          "min": 5,
+          "max": 150
+        }
+      ]
+    }
+  ],
+  "taxonomy": [
+    {
+      "key": "clinica-medica",
+      "title": "Clínica Médica",
+      "color": "#3B5249",
+      "topics": [
+        { "key": "cardiologia-sca", "title": "Síndromes Coronarianas Agudas", "weight": 3 },
+        { "key": "endocrino-dm", "title": "Manejo do Diabetes Mellitus e Cetoacidose", "weight": 3 },
+        { "key": "nefro-ira", "title": "Injúria Renal Aguda e Distúrbios Hidroeletrolíticos", "weight": 2 }
+      ]
+    },
+    {
+      "key": "cirurgia-geral",
+      "title": "Cirurgia Geral",
+      "color": "#5C6B73",
+      "topics": [
+        { "key": "trauma-atls", "title": "Atendimento Inicial ao Politraumatizado (ATLS)", "weight": 3 },
+        { "key": "abdome-agudo", "title": "Abdome Agudo Inflamatório e Obstrutivo", "weight": 3 }
+      ]
+    },
+    {
+      "key": "pediatria",
+      "title": "Pediatria",
+      "color": "#7A5C3E",
+      "topics": [
+        { "key": "neonatologia", "title": "Reanimação Neonatal e Icterícia", "weight": 2 },
+        { "key": "imunizacoes", "title": "Calendário Nacional de Vacinação (PNI)", "weight": 3 }
+      ]
+    },
+    {
+      "key": "ginecologia-obstetricia",
+      "title": "Ginecologia e Obstetrícia",
+      "color": "#6D4C5C",
+      "topics": [
+        { "key": "pre-natal-dheg", "title": "Síndromes Hipertensivas da Gestação", "weight": 3 },
+        { "key": "rastreamento-colo", "title": "Rastreamento do Câncer de Colo Uterino", "weight": 2 }
+      ]
+    },
+    {
+      "key": "medicina-preventiva",
+      "title": "Medicina Preventiva e Saúde Coletiva",
+      "color": "#4A5859",
+      "topics": [
+        { "key": "vigilancia-epidemiologica", "title": "Estudos Epidemiológicos e Testes Diagnósticos", "weight": 3 },
+        { "key": "redes-atencao-sus", "title": "Atenção Primária e Financiamento do SUS", "weight": 3 }
+      ]
+    }
+  ],
+  "generators": [
+    {
+      "kind": "linear",
+      "params": {
+        "itemsPerWeek": 4,
+        "itemTypeKey": "estudo-teorico"
+      }
+    }
+  ],
+  "suggestedRules": [
+    {
+      "id": "r_01",
+      "name": "Descanso pós-plantão noturno",
+      "enabled": true,
+      "when": { "trigger": "event.created" },
+      "if": [
+        { "condition": "type-is", "params": { "eventType": "plantao" } },
+        { "condition": "field-equals", "params": { "field": "turno", "value": "noturno" } }
+      ],
+      "then": [
+        {
+          "action": "block-period",
+          "params": { "offset": "PT0H", "anchor": "end", "duration": "PT12H" }
+        }
+      ]
+    },
+    {
+      "id": "r_02",
+      "name": "Revisão automática após simulado",
+      "enabled": false,
+      "when": { "trigger": "event.finished" },
+      "if": [
+        { "condition": "type-is", "params": { "eventType": "simulado" } }
+      ],
+      "then": [
+        {
+          "action": "create-item",
+          "params": { "itemType": "revisao", "offsetDays": 2 }
+        }
+      ]
+    }
+  ],
+  "dashboard": [
+    "progress",
+    "events-of-type:plantao",
+    "upcoming:aula",
+    "hours-by-subject",
+    "accuracy-by-topic"
+  ]
+}
