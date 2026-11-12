@@ -43,5 +43,3 @@ make arch     # só as fronteiras entre módulos (import-linter)
 ## Contribuindo
 
 Leia o [`CONTRIBUTING.md`](CONTRIBUTING.md): fluxo de branch e PR, convenções de código e definição de pronto. O plano das próximas entregas está em [`docs/produto/roadmap.md`](docs/produto/roadmap.md).
-
-O protótipo anterior em TypeScript está preservado na tag `prototipo-ts`.

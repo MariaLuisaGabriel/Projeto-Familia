@@ -5,7 +5,7 @@
 - **Substitui:** [ADR-0002](./0002-typescript-fullstack.md)
 
 ## Contexto
-A v0.2 previa TypeScript em cliente, servidor e pacotes compartilhados, principalmente para que a validação dos campos customizados rodasse igual nos dois lados (R-21). A equipe tem 2 desenvolvedores, há clientes reais desde o primeiro deploy e a preferência da equipe é Python. O protótipo em TypeScript (tag `prototipo-ts`) não tinha persistência nem autenticação reais.
+A v0.2 previa TypeScript em cliente, servidor e pacotes compartilhados, principalmente para que a validação dos campos customizados rodasse igual nos dois lados (R-21). A equipe tem 2 desenvolvedores, há clientes reais desde o primeiro deploy e a preferência da equipe é Python. O protótipo em TypeScript, descartado, não tinha persistência nem autenticação reais.
 
 ## Decisão
 Escrever o sistema em Python 3.14+ com Django 5. Contas com `django.contrib.auth` (model de usuário próprio, R-63) e `django-allauth`. Ferramentas: uv, ruff, pyright com `django-types`, pytest, Hypothesis e import-linter.
