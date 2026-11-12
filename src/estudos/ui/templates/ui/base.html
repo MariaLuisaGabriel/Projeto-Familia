@@ -1,0 +1,42 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Estudos{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'ui/css/base.css' %}">
+  {# HTMX com versão fixada, servido localmente (R-60). #}
+  <script src="{% static 'ui/js/htmx-2.0.11.min.js' %}" defer></script>
+  {% block head %}{% endblock %}
+</head>
+{# Token CSRF enviado em toda requisição HTMX (R-62). #}
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topbar">
+    <a class="brand" href="{% url 'ui:home' %}">Estudos</a>
+    <nav aria-label="Conta">
+      {% if user.is_authenticated %}
+        <span class="topbar-user">{{ user.email }}</span>
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="button button-secondary">Sair</button>
+        </form>
+      {% else %}
+        <a class="button button-secondary" href="{% url 'account_login' %}">Entrar</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% if messages %}
+    <ul class="messages" role="status">
+      {% for message in messages %}<li class="message message-{{ message.tags }}">{{ message }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+
+  <main id="conteudo" class="{% block main_class %}container{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+  {% block body_end %}{% endblock %}
+</body>
+</html>
