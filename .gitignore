@@ -1,8 +1,27 @@
-node_modules/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.import_linter_cache/
+*.egg-info/
+build/
 dist/
-.DS_Store
-*.log
+.coverage
+htmlcov/
+
+# Django
+/staticfiles/
+/media/
+
+# Ambiente
 .env
 .env.local
-coverage/
-.vite/
+
+# Editor e sistema
+.DS_Store
+.idea/
+.vscode/
+*.log

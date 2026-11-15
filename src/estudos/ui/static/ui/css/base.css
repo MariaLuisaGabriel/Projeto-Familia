@@ -1,0 +1,96 @@
+/* Layout base. Acessibilidade mínima WCAG 2.1 AA (R-44): contraste, foco visível, alvos de 44px. */
+
+:root {
+  --color-bg: #ffffff;
+  --color-text: #1f2328;
+  --color-muted: #59636e;
+  --color-border: #d1d9e0;
+  --color-primary: #1f5fa8;
+  --color-primary-text: #ffffff;
+  --color-error: #b42318;
+  --color-success: #1a7f37;
+  --radius: 8px;
+  --space: 1rem;
+  --touch-target: 44px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: var(--space);
+  top: var(--space);
+  padding: 0.5rem 1rem;
+  background: var(--color-bg);
+  z-index: 10;
+}
+
+.container { max-width: 960px; margin: 0 auto; padding: var(--space); }
+.narrow { max-width: 420px; margin: 2rem auto; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space);
+  padding: 0.5rem var(--space);
+  border-bottom: 1px solid var(--color-border);
+}
+.topbar nav { display: flex; align-items: center; gap: var(--space); }
+.topbar nav form { margin: 0; }
+.topbar-user { color: var(--color-muted); }
+.brand { font-weight: 700; color: var(--color-text); text-decoration: none; }
+
+a { color: var(--color-primary); }
+
+button, .button, input[type="submit"] {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--color-primary-text);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.button-secondary {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]), select, textarea {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+form p, form > div { margin-bottom: var(--space); }
+
+.errorlist { color: var(--color-error); padding-left: 1rem; }
+
+.messages { list-style: none; padding: 0; max-width: 960px; margin: var(--space) auto; }
+.message { padding: 0.75rem var(--space); border-radius: var(--radius); border: 1px solid var(--color-border); }
+.message-error { border-color: var(--color-error); color: var(--color-error); }
+.message-success { border-color: var(--color-success); color: var(--color-success); }

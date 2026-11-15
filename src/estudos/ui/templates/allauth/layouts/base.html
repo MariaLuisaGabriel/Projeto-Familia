@@ -1,0 +1,8 @@
+{% extends "ui/base.html" %}
+{# Faz as telas do django-allauth (login, cadastro, senha) usarem o layout do app. #}
+{# As páginas do allauth preenchem `head_title` e `content`. #}
+
+{% block title %}{% block head_title %}{% endblock %} · Estudos{% endblock %}
+{% block head %}{% block extra_head %}{% endblock %}{% endblock %}
+{% block main_class %}container narrow{% endblock %}
+{% block body_end %}{% block extra_body %}{% endblock %}{% endblock %}

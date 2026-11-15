@@ -100,7 +100,7 @@ ADRs aceitos não são reescritos: quando uma decisão muda, o ADR antigo recebe
 |---|---|---|
 | Estilo | Monolito modular (apps Django) | ADR-0001 |
 | Organização interna dos módulos | Hexagonal leve (§4.2) | ADR-0012 (complementa ADR-0001) |
-| Linguagem | Python 3.13+ em todo o sistema | ADR-0009 (substitui ADR-0002) |
+| Linguagem | Python 3.14+ em todo o sistema | ADR-0009 (substitui ADR-0002) |
 | Banco | PostgreSQL, campos customizados em `JSONField` | ADR-0003 |
 | Interface | Templates Django + HTMX, renderização no servidor | ADR-0010 |
 | Comunicação interna assíncrona | Eventos de domínio + Transactional Outbox (Fase 2) | ADR-0004 |
@@ -517,7 +517,7 @@ Condições em `if` são combinadas por **E**. Para **OU**, cria-se outra regra.
 
 ## 10. Dados e persistência
 
-- **R-34** Toda tabela de dados de usuário **DEVE** ter `id` (UUIDv7), `workspace_id`, `created_at`, `updated_at` e `deleted_at` (soft delete). Esses campos vêm de um model abstrato único, definido em `modules/workspaces/` e exportado pela sua interface pública (ele não pode ficar em `core`, que não importa Django por R-01). UUIDv7 é gerado por `uuid.uuid7()` (Python 3.14+) ou pelo pacote `uuid6` em versões anteriores, encapsulado em `core.ids`.
+- **R-34** Toda tabela de dados de usuário **DEVE** ter `id` (UUIDv7), `workspace_id`, `created_at`, `updated_at` e `deleted_at` (soft delete). Esses campos vêm de um model abstrato único, definido em `modules/workspaces/` e exportado pela sua interface pública (ele não pode ficar em `core`, que não importa Django por R-01). UUIDv7 é gerado por `uuid.uuid7()` da biblioteca padrão, encapsulado em `core.ids.new_id`.
 - **R-35** Toda consulta a dados de usuário **DEVE** filtrar por `workspace_id`. Serviços recebem o workspace como parâmetro obrigatório, e o model abstrato da R-34 fornece um queryset com `for_workspace(workspace)`, que é o ponto de partida obrigatório de toda consulta em `services/`. Consultas sem esse filtro só são aceitas em migrações, comandos de manutenção e no admin restrito à equipe.
 - **R-36** Campos customizados **DEVEM** ficar em uma coluna `custom_fields` (`JSONField`, `jsonb` no Postgres), validada no serviço pelo `FieldTypeRegistry` antes de qualquer escrita.
 - **R-37** Campos marcados como analisáveis **DEVEM** ter índice de expressão criado pelo sistema (a partir de `index_expression`). Índices sobre JSON não analisável **NÃO DEVEM** ser criados ad hoc.
@@ -623,7 +623,7 @@ make worker     # sobe o worker Procrastinate (a partir da Fase 2)
 
 ### 14.2 Fronteiras com import-linter
 
-Trecho do `pyproject.toml`:
+Trecho do `pyproject.toml` (a versão vigente é sempre a do arquivo):
 
 ```toml
 [tool.importlinter]
@@ -634,7 +634,8 @@ include_external_packages = true   # necessário para proibir django/procrastina
 name = "domain e core não dependem de infraestrutura (R-01)"
 type = "forbidden"
 source_modules = ["estudos.core", "estudos.modules.*.domain"]
-forbidden_modules = ["django", "procrastinate"]
+forbidden_modules = ["django", "allauth", "procrastinate"]
+allow_indirect_imports = true
 
 [[tool.importlinter.contracts]]
 name = "camadas dentro de cada módulo (R-01, R-02)"
@@ -646,7 +647,7 @@ containers = [
   "estudos.modules.study",
 ]
 # Camadas entre parênteses são opcionais (o módulo pode não tê-las).
-layers = ["(views)", "(api)", "services", "(models)", "(domain)"]
+layers = ["(views)", "(api)", "(services)", "(models)", "(domain)"]
 
 [[tool.importlinter.contracts]]
 name = "pacotes compartilhados não dependem de módulos (R-06)"
