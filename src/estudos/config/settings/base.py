@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "allauth.account",
     # Módulos (ARQUITETURA §4). Cada módulo novo entra aqui no PR que o cria.
     "estudos.modules.identity",
+    "estudos.modules.workspaces",
+    "estudos.modules.agenda",
+    "estudos.modules.study",
 ]
 
 MIDDLEWARE = [

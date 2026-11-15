@@ -14,8 +14,14 @@
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
   <header class="topbar">
-    <a class="brand" href="{% url 'ui:home' %}">Estudos</a>
-    <nav aria-label="Conta">
+    <a class="brand" href="{% url 'workspaces:dashboard' %}">
+      <span>Estudos</span>
+      <span class="brand-tag">modular · htmx</span>
+    </a>
+    <nav aria-label="Navegação global e conta">
+      <a class="button button-secondary" href="{% url 'workspaces:dashboard' %}">Painel</a>
+      <a class="button button-secondary" href="{% url 'agenda:index' %}">Agenda</a>
+      <a class="button button-secondary" href="{% url 'study:index' %}">Estudos</a>
       {% if user.is_authenticated %}
         <span class="topbar-user">{{ user.email }}</span>
         <form method="post" action="{% url 'account_logout' %}">
@@ -35,7 +41,9 @@
   {% endif %}
 
   <main id="conteudo" class="{% block main_class %}container{% endblock %}">
-    {% block content %}{% endblock %}
+    <div id="workspace-stage">
+      {% block content %}{% endblock %}
+    </div>
   </main>
   {% block body_end %}{% endblock %}
 </body>

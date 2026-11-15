@@ -1,0 +1,73 @@
+{# Cabeçalho compartilhado entre os módulos do workspace ativo (R-61, R-65). #}
+<div class="workspace-bar">
+  <div class="workspace-meta">
+    <span class="workspace-eyebrow">
+      template: {{ workspace.template_id }}@{{ workspace.template_version }} · fuso: {{ workspace.timezone }}
+    </span>
+    <h1 class="workspace-title">{{ workspace.name }}</h1>
+    {% if workspace.description %}
+      <p class="workspace-desc">{{ workspace.description }}</p>
+    {% endif %}
+  </div>
+
+  <form
+    method="post"
+    action="{% url 'workspaces:switch' %}"
+    hx-post="{% url 'workspaces:switch' %}"
+    hx-target="#workspace-stage"
+    class="workspace-switcher-form"
+  >
+    {% csrf_token %}
+    <label for="ws-selector" class="skip-link">Alternar Workspace</label>
+    <select id="ws-selector" name="workspace_id" aria-label="Alternar Workspace (Template de Área)">
+      {% for candidate in all_workspaces %}
+        <option
+          value="{{ candidate.workspace_id }}"
+          {% if candidate.workspace_id == workspace.workspace_id %}selected{% endif %}
+        >
+          {{ candidate.name }} ({{ candidate.template_id }})
+        </option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="button button-secondary">Trocar Área</button>
+  </form>
+</div>
+
+<nav class="module-nav" aria-label="Módulos do Workspace">
+  <a
+    href="{% url 'workspaces:dashboard' %}"
+    hx-get="{% url 'workspaces:dashboard' %}"
+    hx-target="#workspace-stage"
+    hx-push-url="true"
+    class="module-tab {% if active_module == 'workspaces' %}module-tab-active{% endif %}"
+  >
+    <span>Visão Geral &amp; Metadados</span>
+    <span class="badge">workspaces</span>
+  </a>
+
+  {% if "agenda" in workspace.active_modules %}
+    <a
+      href="{% url 'agenda:index' %}"
+      hx-get="{% url 'agenda:index' %}"
+      hx-target="#workspace-stage"
+      hx-push-url="true"
+      class="module-tab {% if active_module == 'agenda' %}module-tab-active{% endif %}"
+    >
+      <span>Agenda</span>
+      <span class="badge">agenda</span>
+    </a>
+  {% endif %}
+
+  {% if "study" in workspace.active_modules %}
+    <a
+      href="{% url 'study:index' %}"
+      hx-get="{% url 'study:index' %}"
+      hx-target="#workspace-stage"
+      hx-push-url="true"
+      class="module-tab {% if active_module == 'study' %}module-tab-active{% endif %}"
+    >
+      <span>Cronograma &amp; Tópicos</span>
+      <span class="badge">study</span>
+    </a>
+  {% endif %}
+</nav>

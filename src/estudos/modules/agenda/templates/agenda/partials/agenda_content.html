@@ -1,0 +1,134 @@
+{# Fragmento principal do módulo agenda (R-42, R-61, R-65). #}
+<div class="module-shell">
+  {% include "ui/partials/module_header.html" %}
+
+  <div class="split-grid">
+    {# Coluna 1: Formulário Dinâmico Gerado por EventType (R-42) #}
+    <section class="card" aria-labelledby="new-event-heading">
+      <header class="card-header">
+        <div>
+          <h2 id="new-event-heading" class="card-title">Novo Compromisso</h2>
+          <p class="card-subtitle">
+            Campos gerados automaticamente a partir do tipo selecionado (R-42).
+          </p>
+        </div>
+        <span class="badge badge-accent">agenda</span>
+      </header>
+
+      <form
+        method="post"
+        action="{% url 'agenda:create_event' %}"
+        hx-post="{% url 'agenda:create_event' %}"
+        hx-target="#workspace-stage"
+      >
+        {% csrf_token %}
+        <div>
+          <label for="id_event_type_key">Tipo de Compromisso</label>
+          <select
+            id="id_event_type_key"
+            name="event_type_key"
+            hx-get="{% url 'agenda:event_type_fields' %}"
+            hx-target="#dynamic-event-fields"
+            hx-trigger="change"
+          >
+            {% for et in workspace.event_types %}
+              <option
+                value="{{ et.key }}"
+                {% if selected_event_type and et.key == selected_event_type.key %}selected{% endif %}
+              >
+                {{ et.label }} ({{ et.default_duration_min }} min)
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label for="id_event_title">Título</label>
+          <input
+            type="text"
+            id="id_event_title"
+            name="title"
+            placeholder="Descrição opcional do compromisso"
+            maxlength="2000"
+          >
+        </div>
+
+        <div class="split-grid" style="grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label for="id_start_date">Data</label>
+            <input type="date" id="id_start_date" name="start_date" value="2026-11-16" required>
+          </div>
+          <div>
+            <label for="id_start_time">Horário</label>
+            <input type="time" id="id_start_time" name="start_time" value="08:00" required>
+          </div>
+        </div>
+
+        <div id="dynamic-event-fields">
+          {% include "agenda/partials/event_form_fields.html" %}
+        </div>
+
+        <p class="card-subtitle" style="margin-bottom: 1rem;">
+          Aviso (R-51): Não registre dados pessoais ou identificáveis de terceiros em campos livres.
+        </p>
+
+        <button type="submit">Agendar Compromisso</button>
+      </form>
+    </section>
+
+    {# Coluna 2: Lista de Compromissos e Filtro por Tipo #}
+    <section class="card" aria-labelledby="agenda-list-heading">
+      <header class="card-header">
+        <div>
+          <h2 id="agenda-list-heading" class="card-title">Compromissos no Workspace</h2>
+          <p class="card-subtitle">Filtre por tipo de compromisso definido no template.</p>
+        </div>
+        <span class="badge">{{ events|length }} registro(s)</span>
+      </header>
+
+      <div class="field-pills" style="margin-bottom: 1rem;">
+        <a
+          href="{% url 'agenda:index' %}"
+          hx-get="{% url 'agenda:index' %}"
+          hx-target="#workspace-stage"
+          class="button {% if not filter_type %}button{% else %}button-secondary{% endif %}"
+        >
+          Todos
+        </a>
+        {% for et in workspace.event_types %}
+          <a
+            href="{% url 'agenda:index' %}?type={{ et.key }}"
+            hx-get="{% url 'agenda:index' %}?type={{ et.key }}"
+            hx-target="#workspace-stage"
+            class="button {% if filter_type == et.key %}button{% else %}button-secondary{% endif %}"
+          >
+            {{ et.label }}
+          </a>
+        {% endfor %}
+      </div>
+
+      <div class="list-stack">
+        {% for ev in events %}
+          <div class="list-row">
+            <div>
+              <strong>{{ ev.title }}</strong>
+              <span class="badge badge-accent">{{ ev.event_type_label }}</span>
+              <p class="card-subtitle">
+                {{ ev.start_date }} às {{ ev.start_time }} · duração: {{ ev.duration_min }} min
+              </p>
+              {% if ev.custom_fields %}
+                <div class="field-pills">
+                  {% for k, v in ev.custom_fields.items %}
+                    <span class="field-pill">{{ k }}: {{ v }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% empty %}
+          <p class="card-subtitle">Nenhum compromisso encontrado para este filtro.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>

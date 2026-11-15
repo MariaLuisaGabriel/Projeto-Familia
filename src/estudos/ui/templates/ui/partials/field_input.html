@@ -1,0 +1,39 @@
+{# Renderizador declarativo de campo customizado a partir de FieldSpec (R-42, R-43). #}
+<div>
+  <label for="id_custom_{{ field.key }}">
+    {{ field.label }}
+    <span class="badge">{{ field.field_type }}{% if field.analyzable %} · analisável{% endif %}</span>
+  </label>
+
+  {% if field.field_type == "select" %}
+    <select id="id_custom_{{ field.key }}" name="custom_{{ field.key }}">
+      {% for opt in field.options %}
+        <option value="{{ opt }}">{{ opt }}</option>
+      {% endfor %}
+    </select>
+  {% elif field.field_type == "number" or field.field_type == "duration" %}
+    <input
+      type="number"
+      id="id_custom_{{ field.key }}"
+      name="custom_{{ field.key }}"
+      {% if field.min_value is not None %}min="{{ field.min_value }}"{% endif %}
+      {% if field.max_value is not None %}max="{{ field.max_value }}"{% endif %}
+      placeholder="{{ field.label }}"
+    >
+  {% elif field.field_type == "date" %}
+    <input type="date" id="id_custom_{{ field.key }}" name="custom_{{ field.key }}">
+  {% elif field.field_type == "boolean" %}
+    <select id="id_custom_{{ field.key }}" name="custom_{{ field.key }}">
+      <option value="Sim">Sim</option>
+      <option value="Não">Não</option>
+    </select>
+  {% else %}
+    <input
+      type="text"
+      id="id_custom_{{ field.key }}"
+      name="custom_{{ field.key }}"
+      maxlength="2000"
+      placeholder="{{ field.label }}"
+    >
+  {% endif %}
+</div>

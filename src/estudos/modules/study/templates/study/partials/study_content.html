@@ -1,0 +1,116 @@
+{# Fragmento principal do módulo study (R-24, R-61, R-65). #}
+<div class="module-shell">
+  {% include "ui/partials/module_header.html" %}
+
+  <div class="split-grid">
+    {# Coluna 1: Gerador de Cronograma Linear (R-24) e Taxonomia #}
+    <div class="module-shell">
+      <section class="card" aria-labelledby="generator-heading">
+        <header class="card-header">
+          <div>
+            <h2 id="generator-heading" class="card-title">Gerador de Cronograma Linear</h2>
+            <p class="card-subtitle">
+              Distribui os tópicos do workspace de forma determinística pelas semanas (R-24).
+            </p>
+          </div>
+          <span class="badge badge-accent">linear</span>
+        </header>
+
+        <form
+          method="post"
+          action="{% url 'study:run_generator' %}"
+          hx-post="{% url 'study:run_generator' %}"
+          hx-target="#workspace-stage"
+        >
+          {% csrf_token %}
+          <div>
+            <label for="id_items_per_week">Itens de estudo por semana</label>
+            <input
+              type="number"
+              id="id_items_per_week"
+              name="items_per_week"
+              min="1"
+              max="30"
+              value="{{ default_items_per_week }}"
+              required
+            >
+          </div>
+          <button type="submit">Recalcular Cronograma</button>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="taxonomy-heading">
+        <header class="card-header">
+          <div>
+            <h2 id="taxonomy-heading" class="card-title">Taxonomia de Disciplinas</h2>
+            <p class="card-subtitle">Árvore de conteúdo copiada do template de área.</p>
+          </div>
+          <span class="badge">{{ workspace.taxonomy|length }} disciplinas</span>
+        </header>
+
+        <div class="list-stack">
+          {% for subject in workspace.taxonomy %}
+            <div class="list-row">
+              <div>
+                <strong>{{ subject.title }}</strong>
+                <div class="field-pills">
+                  {% for topic in subject.topics %}
+                    <span class="field-pill">{{ topic.title }} (peso {{ topic.weight }})</span>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    {# Coluna 2: Plano Semanal de Itens de Estudo #}
+    <section class="card" aria-labelledby="study-items-heading">
+      <header class="card-header">
+        <div>
+          <h2 id="study-items-heading" class="card-title">Itens Planejados por Semana</h2>
+          <p class="card-subtitle">
+            {{ completed_count }} de {{ total_count }} concluídos ({{ progress_pct }}%)
+          </p>
+          <div class="progress-track" role="progressbar" aria-valuenow="{{ progress_pct }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" style="width: {{ progress_pct }}%;"></div>
+          </div>
+        </div>
+        <span class="badge badge-success">{{ progress_pct }}%</span>
+      </header>
+
+      <div class="list-stack">
+        {% for item in study_items %}
+          <div class="list-row">
+            <div>
+              <span class="badge">Semana {{ item.week_number }}</span>
+              <strong {% if item.completed %}style="text-decoration: line-through; color: var(--color-muted);"{% endif %}>
+                {{ item.topic_title }}
+              </strong>
+              <p class="card-subtitle">
+                {{ item.subject_title }} · tipo: {{ item.item_type_label }} · peso {{ item.weight }}
+              </p>
+            </div>
+
+            <form
+              method="post"
+              action="{% url 'study:toggle_item' item.id %}"
+              hx-post="{% url 'study:toggle_item' item.id %}"
+              hx-target="#workspace-stage"
+              style="margin: 0;"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="button {% if item.completed %}button-secondary{% else %}button{% endif %}"
+              >
+                {% if item.completed %}Concluído ✓{% else %}Concluir{% endif %}
+              </button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>

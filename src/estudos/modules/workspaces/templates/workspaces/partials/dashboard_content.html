@@ -1,0 +1,123 @@
+{# Fragmento principal do módulo workspaces (R-61: reutilizado na página cheia e no HTMX). #}
+<div class="module-shell">
+  {% include "ui/partials/module_header.html" %}
+
+  {# Grade de Widgets do Painel declarada em workspace.dashboard_specs (L-05, R-42) #}
+  <section aria-label="Widgets do Painel">
+    <div class="widget-grid">
+      {% for widget in widgets %}
+        <article class="card">
+          <header class="card-header">
+            <div>
+              <h2 class="card-title">{{ widget.title }}</h2>
+              <p class="card-subtitle">{{ widget.subtitle }}</p>
+            </div>
+            <span class="badge badge-accent">{{ widget.badge_text }}</span>
+          </header>
+          <div class="metric-value">{{ widget.metric_value }}</div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <div class="split-grid">
+    {# Coluna 1: Customização da Camada 1 (§8.1) #}
+    <section class="card" aria-labelledby="layer1-heading">
+      <header class="card-header">
+        <div>
+          <h2 id="layer1-heading" class="card-title">Camada 1 — Configuração do Workspace</h2>
+          <p class="card-subtitle">
+            Renomeie o espaço ou escolha quais módulos aparecem na barra de navegação.
+          </p>
+        </div>
+        <span class="badge">§8.1</span>
+      </header>
+
+      <form
+        method="post"
+        action="{% url 'workspaces:customize_layer1' %}"
+        hx-post="{% url 'workspaces:customize_layer1' %}"
+        hx-target="#workspace-stage"
+      >
+        {% csrf_token %}
+        <div>
+          <label for="id_workspace_name">Nome do Workspace</label>
+          <input
+            type="text"
+            id="id_workspace_name"
+            name="workspace_name"
+            value="{{ workspace.name }}"
+            maxlength="120"
+            required
+          >
+        </div>
+
+        <fieldset style="border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 1rem;">
+          <legend style="font-weight: 600; font-size: 0.85rem; padding: 0 0.35rem;">
+            Módulos ativos na interface
+          </legend>
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              name="active_modules"
+              value="agenda"
+              {% if "agenda" in workspace.active_modules %}checked{% endif %}
+            >
+            <span>Módulo Agenda (compromissos e tipos de evento)</span>
+          </label>
+          <label class="checkbox-row">
+            <input
+              type="checkbox"
+              name="active_modules"
+              value="study"
+              {% if "study" in workspace.active_modules %}checked{% endif %}
+            >
+            <span>Módulo Estudos (taxonomia e gerador de cronograma)</span>
+          </label>
+        </fieldset>
+
+        <button type="submit">Salvar Configuração</button>
+      </form>
+    </section>
+
+    {# Coluna 2: Catálogo de Metadados Instanciados do Template (R-15) #}
+    <section class="card" aria-labelledby="metadata-heading">
+      <header class="card-header">
+        <div>
+          <h2 id="metadata-heading" class="card-title">Metadados Instanciados no Workspace</h2>
+          <p class="card-subtitle">
+            Tipos de compromisso e de item copiados do template de área (ADR-0006, R-15).
+          </p>
+        </div>
+        <span class="badge">{{ workspace.event_types|length }} tipos</span>
+      </header>
+
+      <div class="list-stack">
+        {% for et in workspace.event_types %}
+          <div class="list-row">
+            <div>
+              <strong>{{ et.label }}</strong>
+              <span class="badge">{{ et.key }} · {{ et.default_duration_min }} min</span>
+              <div class="field-pills">
+                {% for f in et.fields %}
+                  <span class="field-pill">{{ f.label }} ({{ f.field_type }})</span>
+                {% empty %}
+                  <span class="field-pill">Sem campos extras</span>
+                {% endfor %}
+              </div>
+            </div>
+            <a
+              class="button button-secondary"
+              href="{% url 'agenda:index' %}?type={{ et.key }}"
+              hx-get="{% url 'agenda:index' %}?type={{ et.key }}"
+              hx-target="#workspace-stage"
+              hx-push-url="true"
+            >
+              Ver na Agenda
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>

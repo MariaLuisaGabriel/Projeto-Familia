@@ -98,6 +98,9 @@ type = "layers"
 # Cada módulo novo entra nesta lista no mesmo PR que o cria.
 containers = [
     "estudos.modules.identity",
+    "estudos.modules.workspaces",
+    "estudos.modules.agenda",
+    "estudos.modules.study",
 ]
 layers = ["(views)", "(api)", "(services)", "(models)", "(domain)"]
 

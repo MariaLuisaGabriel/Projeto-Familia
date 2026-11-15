@@ -3,6 +3,27 @@
 {% block title %}Início · Estudos{% endblock %}
 
 {% block content %}
-  <h1>Olá!</h1>
-  <p>Você entrou como <strong>{{ user.email }}</strong>. Seus workspaces vão aparecer aqui.</p>
+  <section class="card">
+    <header class="card-header">
+      <div>
+        <h1 class="card-title">Bem-vindo à Plataforma de Estudos</h1>
+        <p class="card-subtitle">
+          Organização modular adaptada à sua área por meio de templates declarativos.
+        </p>
+      </div>
+      <span class="badge badge-accent">Fase 0 · MVP</span>
+    </header>
+    <p>
+      {% if user.is_authenticated %}
+        Você entrou como <strong>{{ user.email }}</strong>.
+      {% else %}
+        Explore os módulos do workspace ou entre na sua conta para sincronizar seu progresso.
+      {% endif %}
+    </p>
+    <div class="field-pills">
+      <a class="button" href="{% url 'workspaces:dashboard' %}">Abrir Painel do Workspace</a>
+      <a class="button button-secondary" href="{% url 'agenda:index' %}">Ir para Agenda</a>
+      <a class="button button-secondary" href="{% url 'study:index' %}">Ir para Cronograma</a>
+    </div>
+  </section>
 {% endblock %}

@@ -1,0 +1,6 @@
+{# Fragmento de campos customizados do EventType selecionado (R-42, R-61). #}
+{% if selected_event_type %}
+  {% for field in selected_event_type.fields %}
+    {% include "ui/partials/field_input.html" with field=field %}
+  {% endfor %}
+{% endif %}
